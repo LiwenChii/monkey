@@ -1,3 +1,6 @@
+from .token import Token, TokenType
+
+
 class Lexer:
     def __init__(self, input_str):
         self.ch = ''
@@ -8,11 +11,12 @@ class Lexer:
     def next_token(self):
         self.read_char()
 
-        while self.ch != '':
-            if self.ch == '=':
-                return 'equal', '='
-
-            self.read_char()
+        if self.ch == '=':
+            return Token(TokenType.ASSIGN, '=')
+        elif self.ch == '+':
+            return Token(TokenType.ADD, '+')
+        elif self.ch == ',':
+            return Token(TokenType.COMMA, ',')
 
     def read_char(self):
         if self.read_position >= len(self.input_str):
