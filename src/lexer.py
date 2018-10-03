@@ -14,9 +14,21 @@ class Lexer:
         if self.ch == '=':
             return Token(TokenType.ASSIGN, '=')
         elif self.ch == '+':
-            return Token(TokenType.ADD, '+')
+            return Token(TokenType.PLUS, '+')
         elif self.ch == ',':
             return Token(TokenType.COMMA, ',')
+        elif self.ch == '(':
+            return Token(TokenType.LPAREN, '(')
+        elif self.ch == ')':
+            return Token(TokenType.RPAREN, ')')
+        elif self.ch == '{':
+            return Token(TokenType.LBRACE, '{')
+        elif self.ch == '}':
+            return Token(TokenType.RBRACE, '}')
+        elif self.ch == ';':
+            return Token(TokenType.SEMICOLON, ';')
+        else:
+            return Token(TokenType.EOF, '')
 
     def read_char(self):
         if self.read_position >= len(self.input_str):

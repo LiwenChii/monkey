@@ -10,6 +10,17 @@ class TestLexer(unittest.TestCase):
 
     def test_next_token(self):
         input_str = '=+(){},;'
+        output_list = [Token(TokenType.ASSIGN, '='),
+                       Token(TokenType.PLUS, '+'),
+                       Token(TokenType.LPAREN, '('),
+                       Token(TokenType.RPAREN, ')'),
+                       Token(TokenType.LBRACE, '{'),
+                       Token(TokenType.RBRACE, '}'),
+                       Token(TokenType.COMMA, ','),
+                       Token(TokenType.SEMICOLON, ';'),
+                       Token(TokenType.EOF, '')]
+
         l = Lexer(input_str)
-        t = l.next_token()
-        self.assert_token_equal(t, Token(TokenType.ASSIGN, '='))
+        for o in output_list:
+            t = l.next_token()
+            self.assert_token_equal(t, o)
