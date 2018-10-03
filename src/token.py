@@ -11,7 +11,10 @@ class TokenType(Enum):
     RBRACE = 5
     COMMA = 6
     SEMICOLON = 7
-    EOF = 8
+    FUNCTION = 8
+    LET = 9
+    IDENT = 10
+    EOF = 11
 
     def __int__(self):
         return self.value

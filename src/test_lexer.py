@@ -9,7 +9,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(first._literal, second._literal)
 
     def test_next_token(self):
-        input_str = '=+(){},;'
+        input_str = '=+(){},;abc'
         output_list = [Token(TokenType.ASSIGN, '='),
                        Token(TokenType.PLUS, '+'),
                        Token(TokenType.LPAREN, '('),
@@ -18,6 +18,7 @@ class TestLexer(unittest.TestCase):
                        Token(TokenType.RBRACE, '}'),
                        Token(TokenType.COMMA, ','),
                        Token(TokenType.SEMICOLON, ';'),
+                       Token(TokenType.IDENT, 'abc'),
                        Token(TokenType.EOF, '')]
 
         l = Lexer(input_str)
