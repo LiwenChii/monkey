@@ -1,5 +1,5 @@
 import unittest
-from .token import Token, TokenType
+from monkey.token import Token, TokenType
 
 
 class TestToken(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
-from .lexer import Lexer
-from .token import Token, TokenType
+from monkey.lexer import Lexer
+from monkey.token import Token, TokenType
 
 
 class TestLexer(unittest.TestCase):
