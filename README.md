@@ -1,14 +1,14 @@
-# monkey
+# Monkey
 
-### usage
+### Usage
 
-#### test
+#### Test
 ```
-python -m unittest monkey test\test_token.py
-python -m unittest monkey test\test_lexer.py
+python -m unittest test\test_token.py
+python -m unittest test\test_lexer.py
 ```
 
-#### repl
+#### REPL
 ```
 python -m monkey.main
 ```
