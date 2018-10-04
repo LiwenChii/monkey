@@ -17,21 +17,33 @@ class Lexer:
         self.skip_white_space()
 
         if self.ch == '=':
-            tk = Token(TokenType.ASSIGN, '=')
+            tk = Token(TokenType.ASSIGN, self.ch)
         elif self.ch == '+':
-            tk = Token(TokenType.PLUS, '+')
+            tk = Token(TokenType.PLUS, self.ch)
+        elif self.ch == '-':
+            tk = Token(TokenType.MINUS, self.ch)
+        elif self.ch == '!':
+            tk = Token(TokenType.BANG, self.ch)
+        elif self.ch == '/':
+            tk = Token(TokenType.SLASH, self.ch)
+        elif self.ch == '*':
+            tk = Token(TokenType.ASTERISK, self.ch)
+        elif self.ch == '<':
+            tk = Token(TokenType.LT, self.ch)
+        elif self.ch == '>':
+            tk = Token(TokenType.GT, self.ch)
         elif self.ch == ',':
-            tk = Token(TokenType.COMMA, ',')
+            tk = Token(TokenType.COMMA, self.ch)
         elif self.ch == '(':
-            tk = Token(TokenType.LPAREN, '(')
+            tk = Token(TokenType.LPAREN, self.ch)
         elif self.ch == ')':
-            tk = Token(TokenType.RPAREN, ')')
+            tk = Token(TokenType.RPAREN, self.ch)
         elif self.ch == '{':
-            tk = Token(TokenType.LBRACE, '{')
+            tk = Token(TokenType.LBRACE, self.ch)
         elif self.ch == '}':
-            tk = Token(TokenType.RBRACE, '}')
+            tk = Token(TokenType.RBRACE, self.ch)
         elif self.ch == ';':
-            tk = Token(TokenType.SEMICOLON, ';')
+            tk = Token(TokenType.SEMICOLON, self.ch)
         elif self.is_letter(self.ch):
             token_literal = self.read_identifier()
             token_type = self.look_up_ident_type(token_literal)
@@ -41,7 +53,7 @@ class Lexer:
             token_type = TokenType.INT
             return Token(token_type, token_literal)
         elif self.ch == '':
-            tk = Token(TokenType.EOF, '')
+            tk = Token(TokenType.EOF, self.ch)
         else:
             tk = Token(TokenType.ILLEGAL, self.ch)
 

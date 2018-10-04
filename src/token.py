@@ -17,6 +17,12 @@ class TokenType(Enum):
     INT = 11
     ILLEGAL = 12
     EOF = 13
+    MINUS = 14
+    BANG = 15
+    ASTERISK = 16
+    SLASH = 17
+    LT = 18
+    GT = 19
 
     def __int__(self):
         return self.value
