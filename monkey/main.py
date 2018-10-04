@@ -1,5 +1,5 @@
 import getpass
-from repl import start
+from .repl import start
 
 
 def main():
