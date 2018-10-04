@@ -14,7 +14,9 @@ class TokenType(Enum):
     FUNCTION = 8
     LET = 9
     IDENT = 10
-    EOF = 11
+    INT = 11
+    ILLEGAL = 12
+    EOF = 13
 
     def __int__(self):
         return self.value

@@ -11,32 +11,42 @@ class Lexer:
             'fn': TokenType.FUNCTION,
             'let': TokenType.LET,
         }
-
-    def next_token(self):
         self.read_char()
 
+    def next_token(self):
+        self.skip_white_space()
+
         if self.ch == '=':
-            return Token(TokenType.ASSIGN, '=')
+            tk = Token(TokenType.ASSIGN, '=')
         elif self.ch == '+':
-            return Token(TokenType.PLUS, '+')
+            tk = Token(TokenType.PLUS, '+')
         elif self.ch == ',':
-            return Token(TokenType.COMMA, ',')
+            tk = Token(TokenType.COMMA, ',')
         elif self.ch == '(':
-            return Token(TokenType.LPAREN, '(')
+            tk = Token(TokenType.LPAREN, '(')
         elif self.ch == ')':
-            return Token(TokenType.RPAREN, ')')
+            tk = Token(TokenType.RPAREN, ')')
         elif self.ch == '{':
-            return Token(TokenType.LBRACE, '{')
+            tk = Token(TokenType.LBRACE, '{')
         elif self.ch == '}':
-            return Token(TokenType.RBRACE, '}')
+            tk = Token(TokenType.RBRACE, '}')
         elif self.ch == ';':
-            return Token(TokenType.SEMICOLON, ';')
+            tk = Token(TokenType.SEMICOLON, ';')
         elif self.is_letter(self.ch):
-            ident = self.read_identifier()
-            ident_type = self.look_up_ident_type(ident)
-            return Token(ident_type, ident)
+            token_literal = self.read_identifier()
+            token_type = self.look_up_ident_type(token_literal)
+            return Token(token_type, token_literal)
+        elif self.ch.isdigit():
+            token_literal = self.read_number()
+            token_type = TokenType.INT
+            return Token(token_type, token_literal)
+        elif self.ch == '':
+            tk = Token(TokenType.EOF, '')
         else:
-            return Token(TokenType.EOF, '')
+            tk = Token(TokenType.ILLEGAL, self.ch)
+
+        self.read_char()
+        return tk
 
     def read_char(self):
         if self.read_position >= len(self.input_str):
@@ -49,6 +59,14 @@ class Lexer:
     def read_identifier(self):
         position = self.position
         while self.is_letter(self.ch):
+            self.read_char()
+
+        return self.input_str[position:self.position]
+
+    def read_number(self):
+        position = self.position
+
+        while self.ch.isdigit():
             self.read_char()
 
         return self.input_str[position:self.position]
@@ -66,3 +84,7 @@ class Lexer:
         letter_list = letters + capital_letters + ['_']
 
         return ch in letter_list
+
+    def skip_white_space(self):
+        while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
+            self.read_char()
