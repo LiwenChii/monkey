@@ -9,7 +9,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(first._literal, second._literal)
 
     def test_next_token(self):
-        input_str = '  =+(){},;abc56!-/*5;5 < 10 > 5;'
+        input_str = '  =+(){},;abc56!-/*5;5 < 10 > 5;if (5 < 10) {return true;} else {return false;}'
         output_list = [Token(TokenType.ASSIGN, '='),
                        Token(TokenType.PLUS, '+'),
                        Token(TokenType.LPAREN, '('),
@@ -32,6 +32,23 @@ class TestLexer(unittest.TestCase):
                        Token(TokenType.GT, '>'),
                        Token(TokenType.INT, '5'),
                        Token(TokenType.SEMICOLON, ';'),
+                       Token(TokenType.IF, 'if'),
+                       Token(TokenType.LPAREN, '('),
+                       Token(TokenType.INT, '5'),
+                       Token(TokenType.LT, '<'),
+                       Token(TokenType.INT, '10'),
+                       Token(TokenType.RPAREN, ')'),
+                       Token(TokenType.LBRACE, '{'),
+                       Token(TokenType.RETURN, 'return'),
+                       Token(TokenType.TRUE, 'true'),
+                       Token(TokenType.SEMICOLON, ';'),
+                       Token(TokenType.RBRACE, '}'),
+                       Token(TokenType.ELSE, 'else'),
+                       Token(TokenType.LBRACE, '{'),
+                       Token(TokenType.RETURN, 'return'),
+                       Token(TokenType.FALSE, 'false'),
+                       Token(TokenType.SEMICOLON, ';'),
+                       Token(TokenType.RBRACE, '}'),
                        Token(TokenType.EOF, '')]
 
         l = Lexer(input_str)

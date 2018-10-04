@@ -10,6 +10,11 @@ class Lexer:
         self._keyword_map = {
             'fn': TokenType.FUNCTION,
             'let': TokenType.LET,
+            'true': TokenType.TRUE,
+            'false': TokenType.FALSE,
+            'if': TokenType.IF,
+            'else': TokenType.ELSE,
+            'return': TokenType.RETURN
         }
         self.read_char()
 

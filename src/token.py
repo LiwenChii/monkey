@@ -23,6 +23,11 @@ class TokenType(Enum):
     SLASH = 17
     LT = 18
     GT = 19
+    TRUE = 20
+    FALSE = 21
+    IF = 22
+    ELSE = 23
+    RETURN = 24
 
     def __int__(self):
         return self.value
