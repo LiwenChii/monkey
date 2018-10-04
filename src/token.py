@@ -28,6 +28,8 @@ class TokenType(Enum):
     IF = 22
     ELSE = 23
     RETURN = 24
+    EQ = 25
+    NOT_EQ = 26
 
     def __int__(self):
         return self.value

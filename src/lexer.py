@@ -22,13 +22,23 @@ class Lexer:
         self.skip_white_space()
 
         if self.ch == '=':
-            tk = Token(TokenType.ASSIGN, self.ch)
+            if self.peek_char() == '=':
+                ch = self.ch
+                self.read_char()
+                tk = Token(TokenType.EQ, ch + self.ch)
+            else:
+                tk = Token(TokenType.ASSIGN, self.ch)
         elif self.ch == '+':
             tk = Token(TokenType.PLUS, self.ch)
         elif self.ch == '-':
             tk = Token(TokenType.MINUS, self.ch)
         elif self.ch == '!':
-            tk = Token(TokenType.BANG, self.ch)
+            if self.peek_char() == '=':
+                ch = self.ch
+                self.read_char()
+                tk = Token(TokenType.NOT_EQ, ch + self.ch)
+            else:
+                tk = Token(TokenType.BANG, self.ch)
         elif self.ch == '/':
             tk = Token(TokenType.SLASH, self.ch)
         elif self.ch == '*':
@@ -105,3 +115,9 @@ class Lexer:
     def skip_white_space(self):
         while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
             self.read_char()
+
+    def peek_char(self):
+        if self.read_position >= len(self.input_str):
+            return ''
+
+        return self.input_str[self.read_position]
