@@ -1,5 +1,5 @@
-from monkey.lexer import Lexer
-from monkey.token import TokenType
+from lexer import Lexer
+from token import TokenType
 
 
 def start():
