@@ -16,7 +16,7 @@ class LetStatement:
         self.value = None
 
     def token_literal(self):
-        pass
+        return self.token._literal
 
     def statement_node(self):
         pass
@@ -26,3 +26,6 @@ class Identifier:
     def __init__(self, token, value):
         self.token = token
         self.value = value
+
+    def token_literal(self):
+        return self.token._literal
