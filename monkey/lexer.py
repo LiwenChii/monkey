@@ -109,7 +109,7 @@ class Lexer:
         letters = [chr(i) for i in range(97, 123)]
         capital_letters = [chr(i).upper() for i in range(97, 123)]
         letter_list = letters + capital_letters + ['_']
-
+        # print(letter_list)
         return ch in letter_list
 
     def skip_white_space(self):
