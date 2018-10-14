@@ -5,11 +5,12 @@ from monkey.parser import Parser
 
 class TestParser(unittest.TestCase):
     def test_let_statements(self):
-        input = 'let x = 5;let y = 10;let foobar = 838383;'
+        input = 'let x  5;let y = 10;let foobar = 838383;'
         l = Lexer(input)
         p = Parser(l)
 
         program = p.parse_program()
+        self.check_parse_errors(p)
         self.assertEqual(len(program.statements), 3)
 
         expect_identifier_names = ["x", "y", "foobar"]
@@ -23,3 +24,15 @@ class TestParser(unittest.TestCase):
         self.assertEqual(statement.token_literal(), "let")
         self.assertEqual(statement.name.value, name)
         self.assertEqual(statement.name.token_literal(), name)
+
+    def check_parse_errors(self, program):
+        errors = program.errors
+
+        if len(errors) == 0:
+            return
+
+        print("parser has {} errors".format(len(errors)))
+        for msg in errors:
+            print("parse error: {}".format(msg))
+
+        self.fail()
