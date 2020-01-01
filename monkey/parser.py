@@ -1,5 +1,36 @@
 from .token import Token, TokenType
-from .ast import Program, LetStatement, Identifier
+from .ast import (
+    Program,
+    LetStatement,
+    Identifier,
+    ReturnStatement,
+    ExpressionStatement,
+    IntegerLiteral,
+    PrefixExpression,
+    InfixExpression,
+)
+
+# operator precedences
+LOWEST = 0
+EQUALS = 1
+LESSGREATER = 2
+SUM = 3
+PRODUCT = 4
+PREFIX = 5
+CALL = 6
+
+# token precedences
+precedences = {
+    TokenType.EQ: EQUALS,
+    TokenType.NOT_EQ: EQUALS,
+    TokenType.LT: LESSGREATER,
+    TokenType.GT: LESSGREATER,
+    TokenType.PLUS: SUM,
+    TokenType.MINUS: SUM,
+    TokenType.SLASH: PRODUCT,
+    TokenType.ASTERISK: PRODUCT,
+    TokenType.LPAREN: CALL,
+}
 
 
 class Parser:
@@ -8,6 +39,20 @@ class Parser:
         self.cur_token = Token(TokenType.EOF, '')
         self.peek_token = Token(TokenType.EOF, '')
         self.errors = []
+        self.prefix_parse_functions = dict()
+        self.register_prefix(TokenType.IDENT, self.parse_identifier)
+        self.register_prefix(TokenType.INT, self.parse_integer_literal)
+        self.register_prefix(TokenType.BANG, self.parse_prefix_expression)
+        self.register_prefix(TokenType.MINUS, self.parse_prefix_expression)
+        self.infix_parse_functions = dict()
+        self.register_infix(TokenType.PLUS, self.parse_infix_expression)
+        self.register_infix(TokenType.MINUS, self.parse_infix_expression)
+        self.register_infix(TokenType.SLASH, self.parse_infix_expression)
+        self.register_infix(TokenType.ASTERISK, self.parse_infix_expression)
+        self.register_infix(TokenType.EQ, self.parse_infix_expression)
+        self.register_infix(TokenType.NOT_EQ, self.parse_infix_expression)
+        self.register_infix(TokenType.LT, self.parse_infix_expression)
+        self.register_infix(TokenType.GT, self.parse_infix_expression)
 
         self.next_token()
         self.next_token()
@@ -30,6 +75,12 @@ class Parser:
     def cur_token_is(self, token_type):
         return self.cur_token._type == token_type
 
+    def register_prefix(self, token, function):
+        self.prefix_parse_functions[token] = function
+
+    def register_infix(self, token, function):
+        self.infix_parse_functions[token] = function
+
     def parse_program(self):
         program = Program()
 
@@ -42,11 +93,17 @@ class Parser:
 
         return program
 
+    def parse_identifier(self):
+        i = Identifier(self.cur_token, self.cur_token._literal)
+        return i
+
     def parse_statement(self):
-        if self.cur_token._type == TokenType.LET:
+        if self.cur_token_is(TokenType.LET):
             return self.parse_let_statement()
+        elif self.cur_token_is(TokenType.RETURN):
+            return self.parse_return_statement()
         else:
-            return None
+            return self.parse_expression_statement()
 
     def parse_let_statement(self):
         statement = LetStatement(self.cur_token)
@@ -64,6 +121,72 @@ class Parser:
 
         return statement
 
+    def parse_return_statement(self):
+        statement = ReturnStatement(self.cur_token)
+
+        self.next_token()
+        while not self.cur_token_is(TokenType.SEMICOLON):
+            self.next_token()
+
+        return statement
+
+    def parse_expression(self, precedence):
+        prefix = self.prefix_parse_functions.get(self.cur_token)
+        if not prefix:
+            self.no_prefix_parse_function_error(self.cur_token._type)
+            return prefix
+        left_exp = prefix()
+        return left_exp
+
+    def parse_expression_statement(self):
+        statement = ExpressionStatement(self.cur_token)
+
+        expression = self.parse_expression(LOWEST)
+        if self.peek_token_is(TokenType.SEMICOLON):
+            self.next_token()
+
+        return statement
+
+    def parse_integer_literal(self):
+        integer = IntegerLiteral(self.cur_token)
+        try:
+            value = int(integer.token_literal())
+        except Exception as e:
+            print('{}: Could not parse {} as integer'.format(e, integer.token_literal()))
+            return None
+        integer.value = value
+
+        return integer
+
     def peek_error(self, expect_token):
         msg = "expected next token to be {}, got {} instead"
         self.errors.append(msg.format(expect_token, self.peek_token._type))
+
+    def no_prefix_parse_function_error(self, token_type):
+        s = 'no prefix parse function for {} found'.format(token_type)
+        self.errors.append(s)
+
+    def parse_prefix_expression(self):
+        expression = PrefixExpression(self.cur_token, self.cur_token._literal)
+        self.next_token()
+
+        expression.right = self.parse_expression(PREFIX)
+
+        return expression
+
+    def peek_precedence(self):
+        p = precedences.get(self.peek_token._type)
+        return p if p else LOWEST
+
+    def cur_precedence(self):
+        p = precedences.get(self.cur_token._type)
+        return p if p else LOWEST
+
+    def parse_infix_expression(self, left):
+        expression = InfixExpression(self.cur_token, self.cur_token._literal, left)
+
+        precedence = self.cur_precedence()
+        self.next_token()
+        expression.right = self.parse_expression(precedence)
+
+        return expression
