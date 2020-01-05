@@ -136,3 +136,18 @@ class InfixExpression:
     def __str__(self):
         s = '({} {} {})'.format(str(self.left), self.operator, str(self.right))
         return s
+
+
+class Boolean:
+    def __init__(self, token, value):
+        self.token = token
+        self.value = value
+
+    def token_literal(self):
+        return self.token._literal
+
+    def statement_node(self):
+        pass
+
+    def __str__(self):
+        return self.token_literal()

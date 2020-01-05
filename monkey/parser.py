@@ -8,6 +8,7 @@ from .ast import (
     IntegerLiteral,
     PrefixExpression,
     InfixExpression,
+    Boolean,
 )
 
 # operator precedences
@@ -44,6 +45,9 @@ class Parser:
         self.register_prefix(TokenType.INT, self.parse_integer_literal)
         self.register_prefix(TokenType.BANG, self.parse_prefix_expression)
         self.register_prefix(TokenType.MINUS, self.parse_prefix_expression)
+        self.register_prefix(TokenType.TRUE, self.parse_boolean)
+        self.register_prefix(TokenType.FALSE, self.parse_boolean)
+        self.register_prefix(TokenType.LPAREN, self.parse_grouped_expression)
         self.infix_parse_functions = dict()
         self.register_infix(TokenType.PLUS, self.parse_infix_expression)
         self.register_infix(TokenType.MINUS, self.parse_infix_expression)
@@ -136,6 +140,15 @@ class Parser:
             self.no_prefix_parse_function_error(self.cur_token._type)
             return prefix
         left_exp = prefix()
+
+        while not self.peek_token_is(TokenType.SEMICOLON) and precedence < self.peek_precedence():
+            infix = self.infix_parse_functions.get(self.peek_token._type)
+            if infix is None:
+                return left_exp
+
+            self.next_token()
+            left_exp = infix(left_exp)
+
         return left_exp
 
     def parse_expression_statement(self):
@@ -190,3 +203,16 @@ class Parser:
         expression.right = self.parse_expression(precedence)
 
         return expression
+
+    def parse_boolean(self):
+        b = Boolean(self.cur_token, self.cur_token_is(TokenType.TRUE))
+
+    def parse_grouped_expression(self):
+        self.next_token()
+
+        exp = self.parse_expression(LOWEST)
+
+        if not self.expect_peek(TokenType.RPAREN):
+            return None
+
+        return exp
