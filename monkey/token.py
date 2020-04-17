@@ -30,6 +30,9 @@ class TokenType(Enum):
     RETURN = 24
     EQ = 25
     NOT_EQ = 26
+    STRING = 27
+    LBRACKET = 28
+    RBRACKET = 29
 
     def __int__(self):
         return self.value

@@ -138,6 +138,39 @@ class InfixExpression:
         return s
 
 
+class IfExpression:
+    def __init__(self, token):
+        self.token = token
+        self.condition = None
+        self.consequence = None
+        self.alternative = None
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        s = 'if{} {}'.format(str(self.condition), self.consequence)
+        if self.alternative is not None:
+            s += 'else {}'.format(str(self.alternative))
+        return s
+
+
+class BlockStatement:
+    def __init__(self, token):
+        self.token = token
+        self.statements = []
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        r = ''
+        for s in self.statements:
+            r += str(s)
+
+        return r
+
+
 class Boolean:
     def __init__(self, token, value):
         self.token = token
@@ -151,3 +184,90 @@ class Boolean:
 
     def __str__(self):
         return self.token_literal()
+
+
+class FunctionLiteral:
+    def __init__(self, token):
+        self.token = token
+        self.parameters = []
+        self.body = None
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        params = []
+        for p in self.parameters:
+            params.append(str(p))
+
+        params_str = ', '.join(params)
+        s = '({}){}'.format(params_str, str(self.body))
+
+        return s
+
+
+class CallExpression:
+    def __init__(self, token, function):
+        self.token = token
+        self.function = function
+        self.arguments = []
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        arguments = []
+
+        for a in self.arguments:
+            arguments.append(str(a))
+
+        arguments_str = ', '.join(arguments)
+        s = '{}({})'.format(str(self.function), arguments_str)
+
+        return s
+
+
+class StringLiteral:
+    def __init__(self, token, value):
+        self.token = token
+        self.value = value
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        return self.token._literal
+
+
+class ArrayLiteral:
+    def __init__(self, token):
+        self.token = token
+        self.elements = None
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        elements = []
+        for el in self.elements:
+            elements.append(el)
+
+        elements_str = ', '.join(elements)
+
+        s = '[{}]'.format(elements_str)
+
+        return s
+
+
+class IndexExpression:
+    def __init__(self, token, left):
+        self.token = token
+        self.left = left
+        self.index = None
+
+    def token_literal(self):
+        return self.token._literal
+
+    def __str__(self):
+        s = '({}[{}])'.format(str(self.left), str(self.index))
+        return s

@@ -69,11 +69,25 @@ class Lexer:
             return Token(token_type, token_literal)
         elif self.ch == '':
             tk = Token(TokenType.EOF, self.ch)
+        elif self.ch == '"':
+            tk = Token(TokenType.STRING, self.read_string())
+        elif self.ch == '[':
+            tk = Token(TokenType.LBRACKET, self.ch)
+        elif self.ch == ']':
+            tk = Token(TokenType.RBRACKET, self.ch)
         else:
             tk = Token(TokenType.ILLEGAL, self.ch)
 
         self.read_char()
         return tk
+
+    def read_string(self):
+        position = self.position + 1
+        while True:
+            self.read_char()
+            if self.ch == '"':
+                break
+        return self.input_str[position: self.position]
 
     def read_char(self):
         if self.read_position >= len(self.input_str):
