@@ -168,6 +168,7 @@ def eval_array_index_expression(array, index):
 
     return array.elements[idx]
 
+
 def eval_index_expression(left, index):
     if left.type_() == ObjectType.ARRAY_OBJ and index.type_() == ObjectType.INTEGER_OBJ:
         return eval_array_index_expression(left, index)
@@ -233,9 +234,6 @@ def apply_function(fn, args):
         return fn.fn(args)
 
     return new_error('not a function: {}', fn.type_())
-
-
-
 
 
 def extend_function_env(fn, args):
